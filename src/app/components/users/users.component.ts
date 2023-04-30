@@ -53,6 +53,8 @@ export class UsersComponent implements AfterViewInit, OnInit {
         users.secondName.toLowerCase().includes(filter)
       );
     };
+
+    this.users.sort = this.sort;
   }
 
   ngAfterViewInit() {
@@ -60,15 +62,11 @@ export class UsersComponent implements AfterViewInit, OnInit {
   }
 
   announceSortChange(sortState: Sort) {
-    console.log(sortState);
-
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
-
-    console.log(this.users);
   }
 
   applyFilter(event: Event) {
@@ -81,7 +79,13 @@ export class UsersComponent implements AfterViewInit, OnInit {
     console.log(user);
 
     const dialogRef = this.dialog.open(EditUserComponent, {
-      data: { email: user.email, name: user.name },
+      data: {
+        id: user.id,
+        name: user.name,
+        secondName: user.secondName,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

@@ -2,6 +2,7 @@ import { User } from 'src/types/User';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UsersFromServerService } from 'src/app/services/users-from-server.service';
 // import { DialogData } from '../users/users.component';
 
 @Component({
@@ -10,33 +11,53 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./edit-user.component.css']
 })
 export class EditUserComponent {
-  loginForm = new FormGroup({
+  editUserForm = new FormGroup({
+    name: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+    ]),
+    secondName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+    ]),
     email: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[^s@]+@[^s@]+.[^s@]+$'),
+      // Validators.pattern('^[^s@]+@[^s@]+.[^s@]+$'),
+      Validators.email,
     ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(5),
-    ]),
+    // dateOfBirth: new FormControl('', [
+    //   Validators.required,
+    // ]),
   });
 
   constructor(
     public dialogRef: MatDialogRef<EditUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: User,
+    public usersFromServerService: UsersFromServerService
   ) {}
 
   onNoClick(): void {
+    this.editUserForm.reset();
     this.dialogRef.close();
   }
 
   submit() {
     this.dialogRef.close();
-    const email = this.loginForm.controls.email.value || '';
-    const password = this.loginForm.controls.password.value || '';
-    console.log(email, password);
+    const name = this.editUserForm.controls.name.value || '';
+    const secondName = this.editUserForm.controls.secondName.value || '';
+    const email = this.editUserForm.controls.email.value || '';
+    // const dateOfBirth = this.editUserForm.controls.dateOfBirth.value as Date() || new Date();
+    const user: User = {
+      ...this.data,
+      name,
+      secondName,
+      email,
+      // dateOfBirth,
+    }
+    console.log(email);
+    this.usersFromServerService.updateUser(user).subscribe();
 
-    this.loginForm.reset();
-    this.loginForm.markAsUntouched();
+    this.editUserForm.reset();
+    this.editUserForm.markAsUntouched();
   }
 }

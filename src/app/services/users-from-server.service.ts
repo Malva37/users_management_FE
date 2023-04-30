@@ -28,13 +28,13 @@ export class UsersFromServerService {
 
   updateUser(user: User) {
     return this.http
-      .patch<User>(`http://localhost:3000/users/${user.email}`, user)
+      .put<User>(`http://localhost:3000/users/${user.id}`, user)
       .pipe(tap(() => this.refresh$$.next(null)));
   }
 
   deleteUser(user: User) {
     return this.http
-      .delete<User>(`http://localhost:3000/users/${user.email}`)
+      .delete<User>(`http://localhost:3000/users/${user.id}`)
       .pipe(tap(() => this.refresh$$.next(null)));
   }
 

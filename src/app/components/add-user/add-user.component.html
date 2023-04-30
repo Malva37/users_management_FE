@@ -1,1 +1,39 @@
-<p>add-user works!</p>
+<p>You can edit this fields</p>
+
+
+<form [formGroup]="editUserForm" (ngSubmit)="submit()" autocomplete="off">
+  <p>
+    <mat-form-field>
+      <mat-label> Name: </mat-label>
+      <input matInput type="text" formControlName="name" name="name">
+      <mat-error *ngIf="editUserForm.controls.name.invalid">Name length should be at list 2 characters</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Second name: </mat-label>
+      <input matInput type="text" formControlName="secondName" name="secondName">
+      <mat-error *ngIf="editUserForm.controls.secondName.invalid">Second name length should be at list 2 characters</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Email: </mat-label>
+      <input matInput type="text" formControlName="email" name="email">
+      <mat-error *ngIf="editUserForm.controls.email.invalid">Invalid E-Mail Pattern</mat-error>
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+      <mat-label> Date of birth: </mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" name="dateOfBirth">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="editUserForm.controls.dateOfBirth.invalid">Please enter date</mat-error>
+    </mat-form-field>
+  </p>
+</form>
+
+<button mat-button (click)="submit()" mat-raised-button type="submit"  [disabled]="!editUserForm.valid" cdkFocusInitial>Save</button>
+

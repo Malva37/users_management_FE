@@ -3,18 +3,39 @@
   <p>You can edit this fields</p>
 
 
-  <form [formGroup]="loginForm" (ngSubmit)="submit()" autocomplete="off">
+  <form [formGroup]="editUserForm" (ngSubmit)="submit()" autocomplete="off">
+    <p>
+      <mat-form-field>
+        <mat-label> Name: </mat-label>
+        <input matInput type="text" formControlName="name" [(ngModel)]="data.name" name="name">
+        <mat-error *ngIf="editUserForm.controls.name.invalid">Name length should be at list 2 characters</mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field>
+        <mat-label> Second name: </mat-label>
+        <input matInput type="text" formControlName="secondName" [(ngModel)]="data.secondName" name="secondName">
+        <mat-error *ngIf="editUserForm.controls.secondName.invalid">Second name length should be at list 2 characters</mat-error>
+      </mat-form-field>
+    </p>
     <p>
       <mat-form-field>
         <mat-label> Email: </mat-label>
         <input matInput type="text" formControlName="email" [(ngModel)]="data.email" name="email">
-        <mat-error *ngIf="loginForm.controls.email.invalid">Invalid E-Mail Pattern</mat-error>
+        <mat-error *ngIf="editUserForm.controls.email.invalid">Invalid E-Mail Pattern</mat-error>
       </mat-form-field>
     </p>
+    <!-- <p>
+      <mat-form-field>
+        <mat-label> Date of birth: </mat-label>
+        <input matInput type="text" formControlName="dateOfBirth" [(ngModel)]="data.dateOfBirth" name="dateOfBirth">
+        <mat-error *ngIf="editUserForm.controls.dateOfBirth.invalid">Invalid dateOfBirth Pattern</mat-error>
+      </mat-form-field>
+    </p> -->
   </form>
 
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button mat-dialog-close (click)="submit()" mat-raised-button type="submit"  [disabled]="!loginForm.valid" cdkFocusInitial>Save</button>
+  <button mat-button mat-dialog-close (click)="submit()" mat-raised-button type="submit"  [disabled]="!editUserForm.valid" cdkFocusInitial>Save</button>
 </div>
