@@ -1,47 +1,57 @@
-import { Component } from '@angular/core';
+import { MessageComponent } from './../message/message.component';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UsersFromServerService } from 'src/app/services/users-from-server.service';
 import { User } from 'src/types/User';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.css']
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
   // messageError!: string;
-  editUserForm = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-    ]),
-    secondName: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-    ]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]),
-    dateOfBirth: new FormControl('', [
-      Validators.required,
-    ]),
-  });
+  createUserForm!: FormGroup;
 
   constructor(
-    public usersFromServerService: UsersFromServerService
+    public usersFromServerService: UsersFromServerService,
+    public dialog: MatDialog
   ) {}
 
-  submit() {
-    const name = this.editUserForm.controls.name.value || '';
-    const secondName = this.editUserForm.controls.secondName.value || '';
-    const email = this.editUserForm.controls.email.value || '';
-    const dateOfBirth = moment(this.editUserForm.controls.dateOfBirth.value).toDate() || new Date(Date.now());
-    console.log(dateOfBirth);
-    console.log(typeof dateOfBirth);
+  ngOnInit() {
+    this.createForm();
+  }
 
-    const user: User = {
+
+  createForm() {
+    this.createUserForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+      ]),
+      secondName: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+      ]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+      ]),
+      dateOfBirth: new FormControl('', [
+        Validators.required,
+      ]),
+    });
+  }
+
+  createUser() {
+    const name = this.createUserForm.get('name')?.value || '';
+    const secondName = this.createUserForm.get('secondName')?.value || '';
+    const email = this.createUserForm.get('email')?.value || '';
+    const dateOfBirth = moment(this.createUserForm.get('dateOfBirth')?.value).toDate() || new Date(Date.now());
+
+    const newUser: User = {
       id: null,
       name,
       secondName,
@@ -49,16 +59,27 @@ export class AddUserComponent {
       dateOfBirth,
       dateOfRegistration: new Date(Date.now()),
     }
-    console.log(email);
-    this.usersFromServerService.createUser(user).subscribe(
-    //   {
-    //   error: () => {
-    //     this.messageError = 'Unable to create user(try another email)';
-    //     return this.messageError;
-    //   }
-    // }
+    this.usersFromServerService.createUser(newUser).subscribe({
+      error: () => {
+        this.dialog.open(MessageComponent, {
+          data: 'Unable to create user(try another email)'
+        });
+      },
+      next: () => {
+        this.dialog.open(MessageComponent, {
+          data: 'User is created, you can check it in the Users component'
+        });
+      }
+    }
+
     );
-    this.editUserForm.reset();
-    this.editUserForm.markAsUntouched();
+    this.createUserForm.reset();
+    this.createUserForm.markAsUntouched();
   }
+
+  reset() {
+    this.createUserForm.reset();
+    this.createUserForm.markAsUntouched();
+  }
+
 }

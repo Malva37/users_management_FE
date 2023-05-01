@@ -1,41 +1,51 @@
-<h1 mat-dialog-title>Hi {{data.name}}</h1>
-<div mat-dialog-content>
-  <p>You can edit this fields</p>
+<div class="center">
+  <h1 mat-dialog-title>Hi, {{data.name}}</h1>
 
-
-  <form [formGroup]="editUserForm" (ngSubmit)="submit()" autocomplete="off">
-    <p>
-      <mat-form-field>
-        <mat-label> Name: </mat-label>
-        <input matInput type="text" formControlName="name" [(ngModel)]="data.name" name="name">
-        <mat-error *ngIf="editUserForm.controls.name.invalid">Name length should be at list 2 characters</mat-error>
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-form-field>
-        <mat-label> Second name: </mat-label>
-        <input matInput type="text" formControlName="secondName" [(ngModel)]="data.secondName" name="secondName">
-        <mat-error *ngIf="editUserForm.controls.secondName.invalid">Second name length should be at list 2 characters</mat-error>
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-form-field>
-        <mat-label> Email: </mat-label>
-        <input matInput type="text" formControlName="email" [(ngModel)]="data.email" name="email">
-        <mat-error *ngIf="editUserForm.controls.email.invalid">Invalid E-Mail Pattern</mat-error>
-      </mat-form-field>
-    </p>
-    <!-- <p>
-      <mat-form-field>
-        <mat-label> Date of birth: </mat-label>
-        <input matInput type="text" formControlName="dateOfBirth" [(ngModel)]="data.dateOfBirth" name="dateOfBirth">
-        <mat-error *ngIf="editUserForm.controls.dateOfBirth.invalid">Invalid dateOfBirth Pattern</mat-error>
-      </mat-form-field>
-    </p> -->
-  </form>
-
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button mat-dialog-close (click)="submit()" mat-raised-button type="submit"  [disabled]="!editUserForm.valid" cdkFocusInitial>Save</button>
+  <div mat-dialog-content>
+    <form [formGroup]="editUserForm" autocomplete="off">
+      <p>
+        <mat-form-field [style.width.px]=327>
+          <mat-label> Name: </mat-label>
+          <input matInput type="text" formControlName="name" name="name">
+            <mat-error *ngIf="editUserForm.get('name')?.invalid">
+              <span *ngIf="editUserForm.get('name')?.hasError('minlength')">Length should be at least 2 characters long</span>
+              <span *ngIf="editUserForm.get('name')?.hasError('required')">Name is required</span>
+            </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field [style.width.px]=327>
+          <mat-label> Second name: </mat-label>
+          <input matInput type="text" formControlName="secondName" name="secondName">
+          <mat-error *ngIf="editUserForm.get('secondName')?.invalid">
+            <span *ngIf="editUserForm.get('secondName')?.hasError('minlength')">Length should be at least 2 characters long</span>
+            <span *ngIf="editUserForm.get('secondName')?.hasError('required')">Second name is required</span>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field [style.width.px]=327>
+          <mat-label> Email: </mat-label>
+          <input matInput type="text" formControlName="email" name="email">
+          <mat-error *ngIf="editUserForm.get('secondName')?.invalid">
+            <span *ngIf="editUserForm.get('email')?.hasError('email')">Invalid email pattern</span>
+            <span *ngIf="editUserForm.get('email')?.hasError('required')">Email is required</span>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field [style.width.px]=327>
+          <mat-label> Date of birth: </mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" name="dateOfBirth">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="editUserForm.get('dateOfBirth')?.invalid">Date is required</mat-error>
+        </mat-form-field>
+      </p>
+    </form>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="editUser()" mat-raised-button type="submit" [disabled]="!editUserForm.valid" cdkFocusInitial>Save</button>
+  </div>
 </div>

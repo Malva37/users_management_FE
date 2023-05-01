@@ -21,6 +21,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MessageComponent } from './components/message/message.component';
+import {MatIconModule} from '@angular/material/icon';
 
 
 const routes: Routes = [
@@ -40,7 +42,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, UsersComponent, AddUserComponent, EditUserComponent],
+  declarations: [AppComponent, UsersComponent, AddUserComponent, EditUserComponent, MessageComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -59,6 +61,7 @@ const routes: Routes = [
     MatDatepickerModule,
     MatNativeDateModule,
     MatMomentDateModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -3,32 +3,15 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UsersFromServerService } from 'src/app/services/users-from-server.service';
-// import { DialogData } from '../users/users.component';
+import * as moment from 'moment';;
 
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.css']
 })
-export class EditUserComponent {
-  editUserForm = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-    ]),
-    secondName: new FormControl('', [
-      Validators.required,
-      Validators.minLength(2),
-    ]),
-    email: new FormControl('', [
-      Validators.required,
-      // Validators.pattern('^[^s@]+@[^s@]+.[^s@]+$'),
-      Validators.email,
-    ]),
-    // dateOfBirth: new FormControl('', [
-    //   Validators.required,
-    // ]),
-  });
+export class EditUserComponent implements OnInit {
+  editUserForm!: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<EditUserComponent>,
@@ -36,25 +19,52 @@ export class EditUserComponent {
     public usersFromServerService: UsersFromServerService
   ) {}
 
+  ngOnInit() {
+    this.createForm();
+  }
+
+  createForm() {
+    this.editUserForm = new FormGroup({
+      name: new FormControl(this.data.name, [
+        Validators.required,
+        Validators.minLength(2),
+      ]),
+      secondName: new FormControl(this.data.secondName, [
+        Validators.required,
+        Validators.minLength(2),
+      ]),
+      email: new FormControl(this.data.email, [
+        Validators.required,
+        Validators.email,
+      ]),
+      dateOfBirth: new FormControl(this.data.dateOfRegistration, [
+        Validators.required,
+      ]),
+    });
+  }
+
   onNoClick(): void {
     this.editUserForm.reset();
     this.dialogRef.close();
   }
 
-  submit() {
+  prepareData(data: Date) {
+    return moment(data).toDate()
+  }
+
+  editUser() {
     this.dialogRef.close();
-    const name = this.editUserForm.controls.name.value || '';
-    const secondName = this.editUserForm.controls.secondName.value || '';
-    const email = this.editUserForm.controls.email.value || '';
-    // const dateOfBirth = this.editUserForm.controls.dateOfBirth.value as Date() || new Date();
+    const name = this.editUserForm.get('name')?.value || '';
+    const secondName = this.editUserForm.get('secondName')?.value || '';
+    const email = this.editUserForm.get('email')?.value || '';
+    const dateOfBirth = this.prepareData(this.editUserForm.get('dateOfBirth')?.value) || new Date(Date.now());
     const user: User = {
       ...this.data,
       name,
       secondName,
       email,
-      // dateOfBirth,
+      dateOfBirth,
     }
-    console.log(email);
     this.usersFromServerService.updateUser(user).subscribe();
 
     this.editUserForm.reset();

@@ -32,9 +32,9 @@ export class UsersFromServerService {
       .pipe(tap(() => this.refresh$$.next(null)));
   }
 
-  deleteUser(user: User) {
+  deleteUser(id: number) {
     return this.http
-      .delete<User>(`http://localhost:3000/users/${user.id}`)
+      .delete<User>(`http://localhost:3000/users/${id}`)
       .pipe(tap(() => this.refresh$$.next(null)));
   }
 

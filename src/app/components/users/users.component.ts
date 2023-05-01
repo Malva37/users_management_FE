@@ -12,6 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from 'src/types/User';
 import { EditUserComponent } from './../edit-user/edit-user.component';
+import { FormControl } from '@angular/forms';
 
 export interface DialogData {
   animal: string;
@@ -29,12 +30,13 @@ export class UsersComponent implements AfterViewInit, OnInit {
     'secondName',
     'email',
     'dateOfRegistration',
+    'rename',
+    'delete',
   ];
   users = new MatTableDataSource<User>();
   currentUser!: User;
   @ViewChild(MatSort)
   sort!: MatSort;
-  clickedRows = new Set<User>();
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -75,9 +77,7 @@ export class UsersComponent implements AfterViewInit, OnInit {
     this.users.filter = filterValue.trim().toLowerCase();
   }
 
-  openDialog(user: User): void {
-    console.log(user);
-
+  onRename(user: User) {
     const dialogRef = this.dialog.open(EditUserComponent, {
       data: {
         id: user.id,
@@ -87,10 +87,9 @@ export class UsersComponent implements AfterViewInit, OnInit {
         dateOfBirth: user.dateOfBirth,
       },
     });
+  }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      // this.animal = result;
-    });
+  onDelete(id: number) {
+    this.usersFromServerService.deleteUser(id).subscribe();
   }
 }
