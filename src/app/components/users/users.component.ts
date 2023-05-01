@@ -5,14 +5,12 @@ import {
   Component,
   OnInit,
   ViewChild,
-  Inject,
 } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from 'src/types/User';
 import { EditUserComponent } from './../edit-user/edit-user.component';
-import { FormControl } from '@angular/forms';
 
 export interface DialogData {
   animal: string;
@@ -24,7 +22,7 @@ export interface DialogData {
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
 })
-export class UsersComponent implements AfterViewInit, OnInit {
+export class UsersComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'name',
     'secondName',
@@ -35,8 +33,7 @@ export class UsersComponent implements AfterViewInit, OnInit {
   ];
   users = new MatTableDataSource<User>();
   currentUser!: User;
-  @ViewChild(MatSort)
-  sort!: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -55,12 +52,11 @@ export class UsersComponent implements AfterViewInit, OnInit {
         users.secondName.toLowerCase().includes(filter)
       );
     };
-
-    this.users.sort = this.sort;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.users.sort = this.sort;
+    this.sort.sort({ id: 'dateOfRegistration', start: 'asc', disableClear: false });
   }
 
   announceSortChange(sortState: Sort) {
@@ -73,12 +69,11 @@ export class UsersComponent implements AfterViewInit, OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-
     this.users.filter = filterValue.trim().toLowerCase();
   }
 
   onRename(user: User) {
-    const dialogRef = this.dialog.open(EditUserComponent, {
+    this.dialog.open(EditUserComponent, {
       data: {
         id: user.id,
         name: user.name,

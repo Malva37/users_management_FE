@@ -37,7 +37,7 @@ export class EditUserComponent implements OnInit {
         Validators.required,
         Validators.email,
       ]),
-      dateOfBirth: new FormControl(this.data.dateOfRegistration, [
+      dateOfBirth: new FormControl(this.data.dateOfBirth, [
         Validators.required,
       ]),
     });
@@ -48,16 +48,12 @@ export class EditUserComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  prepareData(data: Date) {
-    return moment(data).toDate()
-  }
-
   editUser() {
     this.dialogRef.close();
     const name = this.editUserForm.get('name')?.value || '';
     const secondName = this.editUserForm.get('secondName')?.value || '';
     const email = this.editUserForm.get('email')?.value || '';
-    const dateOfBirth = this.prepareData(this.editUserForm.get('dateOfBirth')?.value) || new Date(Date.now());
+    const dateOfBirth = this.normalizeDate(this.editUserForm.get('dateOfBirth')?.value) || new Date(Date.now());
     const user: User = {
       ...this.data,
       name,
@@ -65,9 +61,13 @@ export class EditUserComponent implements OnInit {
       email,
       dateOfBirth,
     }
-    this.usersFromServerService.updateUser(user).subscribe();
 
+    this.usersFromServerService.updateUser(user).subscribe();
     this.editUserForm.reset();
     this.editUserForm.markAsUntouched();
+  }
+
+  normalizeDate(data: Date) {
+    return moment(data).toDate()
   }
 }

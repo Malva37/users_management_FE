@@ -5,7 +5,8 @@
         <mat-label> Name: </mat-label>
         <input matInput type="text" formControlName="name" name="name">
         <mat-error *ngIf="createUserForm.get('name')?.invalid">
-          <span *ngIf="createUserForm.get('name')?.hasError('minlength')">Length should be at least 2 characters long</span>
+          <span *ngIf="createUserForm.get('name')?.hasError('minlength')">Length should be at least 2 characters
+            long</span>
           <span *ngIf="createUserForm.get('name')?.hasError('required')">Name is required</span>
         </mat-error>
       </mat-form-field>
@@ -15,7 +16,8 @@
         <mat-label> Second name: </mat-label>
         <input matInput type="text" formControlName="secondName" name="secondName">
         <mat-error *ngIf="createUserForm.get('secondName')?.invalid">
-          <span *ngIf="createUserForm.get('secondName')?.hasError('minlength')">Length should be at least 2 characters long</span>
+          <span *ngIf="createUserForm.get('secondName')?.hasError('minlength')">Length should be at least 2 characters
+            long</span>
           <span *ngIf="createUserForm.get('secondName')?.hasError('required')">Second name is required</span>
         </mat-error>
       </mat-form-field>
@@ -42,11 +44,9 @@
     </p>
   </form>
 
-  <!-- <button mat-button (click)="submit()" mat-raised-button type="submit" [disabled]="!createUserForm.valid"
-    cdkFocusInitial>Save</button> -->
-    <div mat-dialog-actions>
-      <button mat-button (click)="reset()">Reset form</button>
-      <button mat-button (click)="createUser()" mat-raised-button type="submit" [disabled]="!createUserForm.valid"
+  <div mat-dialog-actions>
+    <button mat-button (click)="reset()">Reset form</button>
+    <button mat-button (click)="createUser()" mat-raised-button type="submit" [disabled]="!createUserForm.valid"
       cdkFocusInitial>Save</button>
-    </div>
+  </div>
 </div>
